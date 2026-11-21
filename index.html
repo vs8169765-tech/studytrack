@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>StudyTrack | Smart Study Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 22px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    header span {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    .container {
+      width: 86%;
+      max-width: 1100px;
+      margin: 35px auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      padding: 35px;
+      border-radius: 18px;
+      margin-bottom: 25px;
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      opacity: 0.9;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .stat h3 {
+      font-size: 28px;
+      color: #4f46e5;
+    }
+
+    .stat p {
+      color: #6b7280;
+      margin-top: 5px;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin-bottom: 18px;
+    }
+
+    .task-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #4f46e5;
+    }
+
+    button {
+      border: none;
+      background: #4f46e5;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #3730a3;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px;
+      margin-bottom: 10px;
+      background: #f9fafb;
+      border-radius: 9px;
+      border-left: 4px solid #4f46e5;
+    }
+
+    .task.completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .delete {
+      background: #ef4444;
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .delete:hover {
+      background: #b91c1c;
+    }
+
+    .progress-container {
+      margin-top: 15px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 18px;
+      background: #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #4f46e5;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #4f46e5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+      .stats,
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 20px;
+      }
+
+      .container {
+        width: 92%;
+      }
+
+      .hero {
+        padding: 25px;
+      }
+
+      .hero h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <h1>StudyTrack</h1>
+    <span>Smart Study Dashboard</span>
+  </div>
+
+  <div>
+    <span>Student Productivity</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <section class="hero">
+    <h2>Build better study habits.</h2>
+    <p>
+      Organize your tasks, track your progress, and stay consistent.
+    </p>
+  </section>
+
+  <section class="stats">
+
+    <div class="stat">
+      <h3 id="totalTasks">0</h3>
+      <p>Total Tasks</p>
+    </div>
+
+    <div class="stat">
+      <h3 id="completedTasks">0</h3>
+      <p>Completed</p>
+    </div>
+
+    <div class="stat">
+      <h3 id="remainingTasks">0</h3>
+      <p>Remaining</p>
+    </div>
+
+  </section>
+
+  <section class="main">
+
+    <div class="card">
+
+      <h2>My Study Tasks</h2>
+
+      <div class="task-input">
+        <input
+          type="text"
+          id="taskInput"
+          placeholder="Enter a study task..."
+        >
+
+        <button onclick="addTask()">
+          Add
+        </button>
+      </div>
+
+      <div id="taskList"></div>
+
+    </div>
+
+    <div class="card">
+
+      <h2>Study Progress</h2>
+
+      <p>
+        Complete your tasks to increase your progress.
+      </p>
+
+      <div class="progress-container">
+
+        <div class="progress-bar">
+          <div
+            class="progress"
+            id="progressBar">
+          </div>
+        </div>
+
+        <div
+          class="progress-text"
+          id="progressText">
+          0% Complete
+        </div>
+
+      </div>
+
+      <br>
+
+      <h3>How it works</h3>
+
+      <br>
+
+      <p>1. Add your study tasks.</p>
+      <br>
+      <p>2. Check tasks when completed.</p>
+      <br>
+      <p>3. Watch your progress increase.</p>
+
+    </div>
+
+  </section>
+
+</div>
+
+<footer>
+  StudyTrack © 2026 | Built as a student productivity project
+</footer>
+
+<script>
+
+  let tasks = [];
+
+  function addTask() {
+
+    const input = document.getElementById("taskInput");
+
+    const text = input.value.trim();
+
+    if (text === "") {
+      alert("Please enter a task.");
+      return;
+    }
+
+    tasks.push({
+      text: text,
+      completed: false
+    });
+
+    input.value = "";
+
+    renderTasks();
+  }
+
+
+  function toggleTask(index) {
+
+    tasks[index].completed =
+      !tasks[index].completed;
+
+    renderTasks();
+  }
+
+
+  function deleteTask(index) {
+
+    tasks.splice(index, 1);
+
+    renderTasks();
+  }
+
+
+  function renderTasks() {
+
+    const list =
+      document.getElementById("taskList");
+
+    list.innerHTML = "";
+
+    tasks.forEach(function(task, index) {
+
+      const taskElement =
+        document.createElement("div");
+
+      taskElement.className =
+        "task " +
+        (task.completed ? "completed" : "");
+
+      taskElement.innerHTML = `
+
+        <div class="task-left">
+
+          <input
+            type="checkbox"
+            ${task.completed ? "checked" : ""}
+            onchange="toggleTask(${index})"
+          >
+
+          <span>
+            ${task.text}
+          </span>
+
+        </div>
+
+        <button
+          class="delete"
+          onclick="deleteTask(${index})">
+          Delete
+        </button>
+
+      `;
+
+      list.appendChild(taskElement);
+
+    });
+
+    updateStats();
+  }
+
+
+  function updateStats() {
+
+    const total = tasks.length;
+
+    const completed =
+      tasks.filter(task => task.completed).length;
+
+    const remaining =
+      total - completed;
+
+    let percentage = 0;
+
+    if (total > 0) {
+      percentage =
+        Math.round((completed / total) * 100);
+    }
+
+    document.getElementById("totalTasks")
+      .textContent = total;
+
+    document.getElementById("completedTasks")
+      .textContent = completed;
+
+    document.getElementById("remainingTasks")
+      .textContent = remaining;
+
+    document.getElementById("progressBar")
+      .style.width = percentage + "%";
+
+    document.getElementById("progressText")
+      .textContent =
+      percentage + "% Complete";
+  }
+
+
+  document.getElementById("taskInput")
+    .addEventListener("keypress", function(event) {
+
+      if (event.key === "Enter") {
+        addTask();
+      }
+
+    });
+
+
+  renderTasks();
+
+</script>
+
+</body>
+</html>
